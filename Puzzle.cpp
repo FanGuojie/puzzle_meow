@@ -38,59 +38,35 @@ inline void  printLoc(Loc loc) {
 	cout << "x=" + to_string(loc.x) << endl;
 	cout << "y=" + to_string(loc.y) << endl;
 }
-//得到一列数据
-inline vector<int> getCol(vector<int> &num, int x) {
-	vector<int> col;
-	for (int i = 0; i < N; i++)
-	{
-		if (num[i*M + x] == -1)
-			continue;
-		col.push_back(num[i*M + x]);
-	}
-	return col;
-}
-inline vector<int> getRow(vector<int> &num, int y) {
-	vector<int> row;
-	for (int i = 0; i < M; i++)
-	{
-		if (num[y*M + i] == -1)
-			continue;
-		row.push_back(num[y*M + i]);
-	}
-	return row;
-}
-void up(vector<int> &num, int x) {
-	vector<int> col = getCol(num, x);
-	num[x] = -1;
-	for (int i = 1; i < N; i++)
-	{
-		num[i*M + x] = col[i - 1];
-	}
+
+void up(vector<int> &num, Loc loc) {
+	if (loc.y == 0)
+		return;
+	int index1 = loc.y*M + loc.x;
+	int index2 = index1 - M;
+	swap(num[index1], num[index2]);
 }
 
-void down(vector<int> &num, int x) {
-	vector<int> col = getCol(num, x);
-	num[(N - 1)*M + x] = -1;
-	for (int i = 0; i < N - 1; i++)
-	{
-		num[i*M + x] = col[i];
-	}
+void down(vector<int> &num, Loc loc) {
+	if (loc.y == N-1)
+		return;
+	int index1 = loc.y*M + loc.x;
+	int index2 = index1 + M;
+	swap(num[index1], num[index2]);
 }
-void left(vector<int> &num, int y) {
-	vector<int> row = getRow(num, y);
-	num[y*M] = -1;
-	for (int i = 0; i < M - 1; i++)
-	{
-		num[y*M + i + 1] = row[i];
-	}
+void left(vector<int> &num, Loc loc) {
+	if (loc.x == 0)
+		return;
+	int index1 = loc.y*M + loc.x;
+	int index2 = index1 -1;
+	swap(num[index1], num[index2]);
 }
-void right(vector<int> &num, int y) {
-	vector<int> row = getRow(num, y);
-	num[y*M + M - 1] = -1;
-	for (int i = 0; i < M - 1; i++)
-	{
-		num[y*M + i] = row[i];
-	}
+void right(vector<int> &num, Loc loc) {
+	if (loc.x == M - 1)
+		return;
+	int index1 = loc.y*M + loc.x;
+	int index2 = index1 + 1;
+	swap(num[index1], num[index2]);
 }
 
 void Puzzle::puzzleMove(char t)
@@ -101,25 +77,25 @@ void Puzzle::puzzleMove(char t)
 	{
 	case 'W':
 		cout << "空格上移" << endl;
-		up(arr, loc.x);
+		up(arr, loc);
 		showMat();
 		printseg();
 		break;
 	case 'A':
 		cout << "空格左移" << endl;
-		left(arr, loc.y);
+		left(arr, loc);
 		showMat();
 		printseg();
 		break;
 	case 'D':
 		cout << "空格右移" << endl;
-		right(arr, loc.y);
+		right(arr, loc);
 		showMat();
 		printseg();
 		break;
 	case 'S':
 		cout << "空格下移" << endl;
-		down(arr, loc.x);
+		down(arr, loc);
 		showMat();
 		printseg();
 		break;
