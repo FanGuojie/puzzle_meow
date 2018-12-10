@@ -18,9 +18,9 @@ public:
 	Img(string imgPath);
 	~Img();
 	void setsegPath(string str);
-	void setslicePath(string str);
+	void setsplicePath(string str);
 	void segment();
-	void splice(vector<int> arr);
+	void splice(vector<int> arr,string name, string outPath=" ");
 
 
 	
@@ -28,6 +28,6 @@ public:
 private:
 	string path;
 	string segPath;   //分割目录
-	string slicePath ;//拼接目录
+	string splicePath ;//拼接目录
 };
 

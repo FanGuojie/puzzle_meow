@@ -71,7 +71,7 @@ void up(vector<int> &num, int x) {
 void down(vector<int> &num, int x) {
 	vector<int> col = getCol(num, x);
 	num[(N - 1)*M + x] = -1;
-	for (int i = 0; i < N -1 ; i++)
+	for (int i = 0; i < N - 1; i++)
 	{
 		num[i*M + x] = col[i];
 	}
@@ -146,26 +146,69 @@ void Puzzle::shuffleShow()
 	random_shuffle(arr.begin(), arr.end());
 	cout << "shuffle show" << endl;
 	showMat();
+	init = arr;//每次shuffle 保存状态为最初状态
 }
 
 void Puzzle::restart()
 {
 	cout << "重新开始" << endl;
+	arr = init;
+	showMat();
+	printseg();
 }
 
-void Puzzle::saveImg()
+void Puzzle::saveImg(Img img)
 {
-	cout << "输入完整路径名，保存当前状态对应的图像" << endl;
+	cout << "输入保存图片的名称(输入y默认是loveLT.png)" << endl;
+	string name;
+	cin >> name;
+	if(name=="y")
+		name = "loveLT.png";
+	cout << "输入完整路径名，保存当前状态对应的图像(输入y默认保存图片的路径是.\\splice\\)" << endl;
+	string path;
+	cin >> path;
+	if (path == "y") {
+		path = ".\\splice\\";
+	}
+	try
+	{
+		img.splice(arr, name, path);
+	}
+	catch (const std::exception&)
+	{
+		cout << "保存图片失败" << endl;
+	}
+	
+	cout << "保存图片成功" << endl;
+	printseg();
 }
 
 void Puzzle::save()
 {
 	cout << "输入进度名称，保存当前进度" << endl;
+	string name;
+	cin >> name;
+	pair<string, vector<int>> p(name, arr);
+	states.insert(p);
+	cout << "存档成功" << endl;
+	printseg();
 }
 
 void Puzzle::load()
 {
 	cout << "输入进度名称，载入对应的进度" << endl;
+	string name;
+	cin >> name;
+	if (states.find(name) == states.end()) {
+		cout << "对不起，没有该名称的进度" << endl;
+	}
+	else
+	{
+		cout << "读档成功" << endl;
+		arr = states.find(name)->second;
+	}
+	showMat();
+	printseg();
 }
 
 void Puzzle::reduction()

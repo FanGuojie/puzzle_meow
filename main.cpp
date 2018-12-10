@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]) {
 
 	cin >> N >> M;
 	img.setsegPath(".\\segmentImg\\");
-	img.setslicePath(".\\splice\\");
+	img.setsplicePath(".\\splice\\");
 	/*while (!readImg(path)) {
 		cout << "重新输入图片路径" << endl;
 		cin >> path;
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
 	Puzzle p(num);
 	//______________________图片的分割和拼接________________________
 	img.segment();
-	img.splice(p.arr);//图片拼接
+	img.splice(p.arr, "combine.png");//图片拼接
 	//______________________图片数值展示与随机打乱________________________
 
 	cout << "init show" << endl;
@@ -68,6 +68,7 @@ int main(int argc, char const *argv[]) {
 	printRule();
 	while (1) {
 		char t = _getch();
+		t = toCaption(t);
 		switch (t)
 		{
 		case 'W':
@@ -83,7 +84,7 @@ int main(int argc, char const *argv[]) {
 			p.restart();
 			break;
 		case 'G':
-			p.saveImg();
+			p.saveImg(img);
 			break;
 		case 'I':
 			p.save();
@@ -96,7 +97,7 @@ int main(int argc, char const *argv[]) {
 			break;
 		case 'P':
 			cout << "退出游戏，欢迎使用" << endl;
-			system("pause");
+			//system("pause");
 			exit(1);
 			break;
 		default:

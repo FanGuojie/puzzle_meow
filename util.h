@@ -9,3 +9,8 @@ inline void printseg()
 	cout << endl;
 	cout << "_________________________________" << endl;
 }
+inline char toCaption(char t) {
+	if (t >= 'a' && t <= 'z')
+		t = t - 'a' + 'A';
+	return t;
+}

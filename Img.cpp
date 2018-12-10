@@ -16,9 +16,9 @@ void Img::setsegPath(string str)
 	segPath = str;
 }
 
-void Img::setslicePath(string str)
+void Img::setsplicePath(string str)
 {
-	slicePath = str;
+	splicePath = str;
 }
 
 void Img::segment()
@@ -52,8 +52,10 @@ void Img::segment()
 
 }
 
-void Img::splice(vector<int> arr)
+void Img::splice(vector<int> arr,string name,string outPath)
 {
+	if (outPath == " ")
+		outPath = splicePath;
 	//cout << "拼接图片" << endl;
 	Mat row;
 	Mat combine;
@@ -80,7 +82,7 @@ void Img::splice(vector<int> arr)
 	}
 	//namedWindow("Combine",CV_WINDOW_AUTOSIZE);
 	//imshow("Combine",combine);
-	imwrite(slicePath + "combine.png", combine);
+	imwrite(outPath + name, combine);
 }
 inline Mat generatePure(Mat src)
 {
