@@ -366,6 +366,7 @@ void Puzzle::showMat(INTVEC num)
 		}
 		cout << endl;
 	}
+	//cout << "(-1 表示空格)" << endl;
 }
 
 void Puzzle::shuffleShow()

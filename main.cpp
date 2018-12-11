@@ -18,6 +18,7 @@ int M=0, N=0;
 
 int main(int argc, char const *argv[]) {
 	//______________________读取图片目录 & 设置难度 N M________________________
+	welcome();
 	string imgPath;//图片目录
 	cout << "请输入背景图片的路径(输入 y 使用默认的图片 仙女喵.png)" << endl;
 	cin >> imgPath;
@@ -26,11 +27,15 @@ int main(int argc, char const *argv[]) {
 		imgPath = ".\\img\\仙女喵.png";
 	}
 	Img img(imgPath);
-	//img.readImg("小可爱模式");
-	cout << "现在把图片划分成 N * M 的大小，请输入参数以确定游戏难度(输入 y 使用默认参数 3 * 2）" << endl;
+	img.readImg("小可爱模式");
+	INPUT_NM :
+	cout << "现在把图片划分成 N * M 的大小" << endl;
+	cout << "请输入参数以确定游戏难度，即输入两个数字用空格隔开，分别代表N 和 M" << endl;
+	cout<<" 最高可自动复原的难度是 4 * 3 " << endl;
+	cout<<"(输入 y 使用默认参数 3 * 2）" << endl;
 	string tmp;
 	cin >> tmp;
-	if (tmp == "y") {
+	if (tmp == "y"|| tmp=="Y") {
 		printDefault("3 * 2");
 		N = 3;
 		M = 2;
@@ -56,7 +61,7 @@ int main(int argc, char const *argv[]) {
 	Puzzle p(num);
 	//______________________图片的分割和拼接________________________
 	img.segment();
-	img.splice(p.arr, "combine.png");//图片拼接
+	//img.splice(p.arr, "combine.png");//图片拼接
 	//______________________图片数值展示与随机打乱________________________
 
 	cout << "init show" << endl;
@@ -82,10 +87,12 @@ int main(int argc, char const *argv[]) {
 			printseg();
 		}
 	}
+
 	//p.showPossible();
 
 	//______________________开始游玩________________________
 	cout << "欢迎游玩" << endl;
+	p.preview(img);
 	printRule();
 	while (1) {
 		char t = _getch();
@@ -99,6 +106,7 @@ int main(int argc, char const *argv[]) {
 			p.puzzleMove(t);
 			if (p.check()) {
 				cout << "恭喜完成,游戏退出" << endl;
+				p.preview(img);
 				system("pause");
 				exit(1);
 			}
@@ -121,7 +129,13 @@ int main(int argc, char const *argv[]) {
 		case 'X':
 			p.preview(img);
 			break;
-		case 'P':
+		case 'Z':
+			goto INPUT_NM;
+		case 'C':
+			newBackgound(img);
+			
+			break;
+		case 'P': 
 			cout << "退出游戏，欢迎使用" << endl;
 			system("pause");
 			exit(1);

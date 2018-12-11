@@ -31,6 +31,11 @@ void Img::setsplicePath(string str)
 	splicePath = str;
 }
 
+void Img::setPath(string str)
+{
+	path = str;
+}
+
 void Img::segment()
 {
 	//cout << "分割图片" << endl;
