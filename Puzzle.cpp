@@ -305,14 +305,14 @@ void Puzzle::restart()
 
 void Puzzle::saveImg(Img img)
 {
-	cout << "输入保存图片的名称(输入y默认是loveLT.png)" << endl;
+	cout << "输入保存图片的名称(输入 y 使用默认参数  loveLT.png)" << endl;
 	string name;
 	cin >> name;
 	if (name == "y") {
 		printDefault("loveLT.png");
 		name = "loveLT.png";
 	}
-	cout << "输入完整路径名，保存当前状态对应的图像(输入y默认保存图片的路径是.\\splice\\)" << endl;
+	cout << "输入完整路径名，保存当前状态对应的图像(输入 y 使用默认参数 .\\splice\\)" << endl;
 	string path;
 	cin >> path;
 	if (path == "y") {

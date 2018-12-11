@@ -19,7 +19,7 @@ int M=0, N=0;
 int main(int argc, char const *argv[]) {
 	//______________________读取图片目录 & 设置难度 N M________________________
 	string imgPath;//图片目录
-	cout << "请输入背景图片的路径(输入y使用默认的图片 仙女喵.png)" << endl;
+	cout << "请输入背景图片的路径(输入 y 使用默认的图片 仙女喵.png)" << endl;
 	cin >> imgPath;
 	if (imgPath == "y") {
 		cout << "仙女喵突然出现" << endl;
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
 	}
 	Img img(imgPath);
 	img.readImg("小可爱模式");
-	cout << "现在把图片划分成N*M的大小，请输入参数以确定游戏难度(输入y使用默认参数3*3）" << endl;
+	cout << "现在把图片划分成 N * M 的大小，请输入参数以确定游戏难度(输入 y 使用默认参数 3 * 3）" << endl;
 	string tmp;
 	cin >> tmp;
 	if (tmp == "y") {
