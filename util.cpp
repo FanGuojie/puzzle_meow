@@ -30,7 +30,9 @@ void printRule()
 	cout << "\tO:下一行输入进度名称，载入游戏进度" << endl;
 	cout << "6.自动还原" << endl;
 	cout << "\tF：自动完成拼图复原，以WASD组合形式输出复原步骤" << endl;
-	cout << "7退出." << endl;
+	cout << "7图片预览." << endl;
+	cout << "\tX:预览图片，图片暂存在./tmp下" << endl;
+	cout << "8退出." << endl;
 	cout << "\tP:退出游戏，程序结束" << endl;
 	printseg();
 }

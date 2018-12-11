@@ -9,43 +9,118 @@ Puzzle::Puzzle(INTVEC num)
 	string path = "";
 	pair<INTVEC, string>p(ok, path);
 	possible.insert(p);
+	int inv = getInv(ok);
+	Loc loc = getLoc(ok);
+	flag = (inv + loc.x + loc.y) % 2;
 }
 
 Puzzle::~Puzzle()
 {
 }
 
-
-void updateMap(queue <INTVEC>q, map<INTVEC, string>& map) {
+void Puzzle::updatePossible(queue <INTVEC>&q) {
+	INTVEC iter = q.front();
+	string path = possible.find(iter)->second;
+	Loc loc = getLoc(iter);
+	INTVEC move;//还原路径和操作路径相反
+	move = up(iter, loc);
+	addMap("S", move, path, q, possible);
+	move = down(iter, loc);
+	addMap("W", move, path, q, possible);
+	move = left(iter, loc);
+	addMap("D", move, path, q, possible);
+	move = right(iter, loc);
+	addMap("A", move, path, q, possible);
+	q.pop();
+}
+//源和目标搜索的函数分开，原因是加入的字母相反
+void updateMap(queue <INTVEC>&q, map<INTVEC, string>& map) {
 	INTVEC iter = q.front();
 	string path = map.find(iter)->second;
 	Loc loc = getLoc(iter);
 	INTVEC move;//还原路径和操作路径相反
 	move = up(iter, loc);
-	addMap("S", move, path, q,map);
-	move = down(iter, loc);
 	addMap("W", move, path, q, map);
+	move = down(iter, loc);
+	addMap("S", move, path, q, map);
 	move = left(iter, loc);
-	addMap("D", move, path, q, map);
-	move = right(iter, loc);
 	addMap("A", move, path, q, map);
+	move = right(iter, loc);
+	addMap("D", move, path, q, map);
 	q.pop();
 }
 
 INTVEC Puzzle::getSolution(map<INTVEC, string>& solution)
 {
-	INTVEC mid;
 	queue<INTVEC>q1, q2;
 	q1.push(arr);//从当前位置广搜
-	q2.push(ok);//从最终位置广搜
+	//q2.push(ok);//从最终位置广搜
+	initq2(q2);
 	while (true)
 	{
-		updateMap(q2, possible);
+		updatePossible(q2);
+		INTVEC iter = q1.front();
+		//showPossible();
+		//printNum(iter);
+		//system("Pause");
+		if (possible.find(iter) != possible.end()) {
+			return iter;
+		}
+		updateMap(q1, solution);
 
 	}
-	return mid;
 }
-void addMap(string dir, INTVEC & move, string & basepath, queue<INTVEC> &q,map<INTVEC, string > &map)
+void Puzzle::initq2(queue<INTVEC>& q)
+{
+	for (auto i = possible.begin(); i !=possible.end() ; i++)
+	{
+		q.push(i->first);
+	}
+}
+void Puzzle::getAll() {
+	queue<INTVEC> q;
+	q.push(ok);
+	while (!q.empty())
+	{
+		INTVEC iter = q.front();
+		string path = possible.find(iter)->second;
+		Loc loc = getLoc(iter);
+		INTVEC move;//还原路径和操作路径相反
+		move = up(iter, loc);
+		addMap("S", move, path, q, possible);
+		move = down(iter, loc);
+		addMap("W", move, path, q, possible);
+		move = left(iter, loc);
+		addMap("D", move, path, q, possible);
+		move = right(iter, loc);
+		addMap("A", move, path, q, possible);
+		q.pop();
+		if (possible.size() % 5000 == 0)
+			cout << possible.size() << endl;
+		/*if (possible.size() > 30000) {
+		cout << "debug:以1，2，3，4，5，6，7,0 开头的可能数目" << endl;
+		for (auto i = possible.begin(); i != possible.end(); i++)
+		{
+		INTVEC p = i->first;
+		if(debugHead(p))
+		printNum(p);
+		}
+		system("Pause");
+		}*/
+	}
+}
+
+void Puzzle::preview(Img img)
+{
+	string name = "喵喵不气啦，快好了.png";
+	string path = ".//tmp//";
+	img.splice(arr, name, path);
+	img.readImg("杰儿爱喵的~喵不气了",path + name);
+}
+
+
+
+void addMap(string dir, INTVEC & move, string & basepath, queue<INTVEC> &q, map<INTVEC, string > &map)
 {
 	if (map.find(move) == map.end()) {
 		string newpath = basepath;
@@ -86,10 +161,11 @@ int Puzzle::getInv(INTVEC num)
 	int inv = 0;
 	for (int i = 1; i < N*M; i++)
 	{
-		for (int j = 0; j < i - 1; j++)
+		for (int j = 0; j < i; j++)
 		{
-			if (num[i] < num[j])
+			if (num[i] < num[j]) {
 				inv++;
+			}
 		}
 	}
 	return inv;
@@ -102,8 +178,8 @@ bool Puzzle::available()
 	cout << "分析是否可行" << endl;
 	int inv = getInv();
 	Loc loc = getLoc(arr);
-	int flag = inv + loc.x + loc.y;
-	return flag % 2 == 0;
+	int Curflag = inv + loc.x + loc.y;
+	return Curflag % 2 == flag;
 }
 Loc getLoc(INTVEC num)
 {
@@ -211,7 +287,9 @@ void Puzzle::showMat(INTVEC num)
 void Puzzle::shuffleShow()
 {
 	srand(unsigned(time(0)));
-	random_shuffle(arr.begin(), arr.end());
+	do {
+		random_shuffle(arr.begin(), arr.end());
+	} while (arr == ok);
 	cout << "shuffle show" << endl;
 	showMat();
 	init = arr;//每次shuffle 保存状态为最初状态
@@ -286,9 +364,11 @@ void Puzzle::reduction()
 {
 	cout << "自动还原" << endl;
 	map<INTVEC, string> solution;
+	pair<INTVEC, string>p(arr, "");
+	solution.insert(p);
 	INTVEC mid = getSolution(solution);
 	string path1 = solution.find(mid)->second;
-	string path2 = possible.find(arr)->second;
+	string path2 = possible.find(mid)->second;
 	reverse(path2.begin(), path2.end());
 	cout << "还原路径如下" << endl;
 	cout << path1 + path2 << endl;

@@ -4,6 +4,16 @@ extern int M, N;
 Img::Img(string imgPath)
 {
 	path = imgPath;
+	Mat src;
+	//加载图片
+	src = imread(path, 1);
+	//检测是否加载成功
+	while (!src.data)  //or == if(src.empty())
+	{
+		cout << "找不到图片，请重新输入图片所在地址" << endl;
+		cin >> path;
+		src = imread(path, 1);
+	}
 }
 
 
@@ -60,7 +70,7 @@ void Img::splice(vector<int> arr,string name,string outPath)
 	Mat row;
 	Mat combine;
 	string filename;
-	filename = segPath + to_string(0) + ".png";
+	filename = segPath + to_string(arr[0]) + ".png";
 	combine = imread(filename);
 	for (int j = 1; j < M; j++)
 	{
@@ -91,11 +101,14 @@ inline Mat generatePure(Mat src)
 	return M;
 }
 
-int readImg(string path)
+int Img::readImg(string name,string imgPath)
 {
+	if (imgPath == " ") {
+		imgPath = path;
+	}
 	Mat src;
 	//加载图片
-	src = imread(".\\img\\lena_400_225.jpg", 1);
+	src = imread(imgPath, 1);
 	//检测是否加载成功
 	if (!src.data)  //or == if(src.empty())
 	{
@@ -103,9 +116,10 @@ int readImg(string path)
 		return -1;
 	}
 	// 创建窗口
-	namedWindow("Display");
+	namedWindow(name);
 	//显示图像
-	imshow("Display", src);
+	resize(src, src, Size(src.cols / 3, src.rows / 3), 0, 0, INTER_LINEAR);
+	imshow(name, src);
 
 	waitKey(0);
 	return 1;

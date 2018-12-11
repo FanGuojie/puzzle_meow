@@ -22,16 +22,17 @@ int main(int argc, char const *argv[]) {
 	cout << "请输入背景图片的路径(输入y使用默认的图片 仙女喵.png)" << endl;
 	cin >> imgPath;
 	if (imgPath == "y") {
-		printDefault(" 仙女喵.png ");
-		imgPath = "C:\\Users\\fgj\\source\\repos\\puzzle\\puzzle\\img\\lena_400_225.jpg";
+		cout << "仙女喵突然出现" << endl;
+		imgPath = ".\\img\\仙女喵.png";
 	}
 	Img img(imgPath);
+	img.readImg("小可爱模式");
 	cout << "现在把图片划分成N*M的大小，请输入参数以确定游戏难度(输入y使用默认参数3*3）" << endl;
 	string tmp;
 	cin >> tmp;
 	if (tmp == "y") {
 		printDefault("3 * 3");
-		N = 2;
+		N = 3;
 		M = 2;
 	}
 	else {
@@ -61,6 +62,9 @@ int main(int argc, char const *argv[]) {
 	cout << "init show" << endl;
 	p.showMat(); //init show
 	printseg();
+	//p.getAll();
+	//p.showPossible();
+	//printseg();
 	p.shuffleShow();
 	printseg();
 	//______________________验证拼图可行性________________________
@@ -95,6 +99,7 @@ int main(int argc, char const *argv[]) {
 			p.puzzleMove(t);
 			if (p.check()) {
 				cout << "恭喜完成,游戏退出" << endl;
+				system("pause");
 				exit(1);
 			}
 			break;
@@ -113,9 +118,12 @@ int main(int argc, char const *argv[]) {
 		case 'F':
 			p.reduction();
 			break;
+		case 'X':
+			p.preview(img);
+			break;
 		case 'P':
 			cout << "退出游戏，欢迎使用" << endl;
-			//system("pause");
+			system("pause");
 			exit(1);
 			break;
 		default:
@@ -124,6 +132,6 @@ int main(int argc, char const *argv[]) {
 		}
 	}
 
-	//system("pause");
+	system("pause");
 	return 0;
 }

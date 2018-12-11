@@ -10,7 +10,6 @@
 using namespace std;
 using namespace cv;
 inline Mat generatePure(Mat src);
-int readImg(string path = "..\\img\\lena_400_225.jpg");
 
 class Img
 {
@@ -21,6 +20,7 @@ public:
 	void setsplicePath(string str);
 	void segment();
 	void splice(vector<int> arr,string name, string outPath=" ");
+	int readImg(string name,string imgPath =" ");
 
 
 	
