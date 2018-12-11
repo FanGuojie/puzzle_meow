@@ -6,7 +6,7 @@ Puzzle::Puzzle(INTVEC num)
 {
 	arr = num;
 	ok = num;
-	string path ="";
+	string path = "";
 	pair<INTVEC, string>p(ok, path);
 	possible.insert(p);
 }
@@ -16,15 +16,43 @@ Puzzle::~Puzzle()
 }
 
 
-void Puzzle::addPossible(string dir, INTVEC & move, string & basepath,queue<INTVEC> &q)
-{
-	if (possible.find(move) == possible.end()) {
-		string newpath=basepath;
-		newpath+=dir;
-		pair<INTVEC, string>p(move, newpath);
-		possible.insert(p);
-		q.push(move);
+void updateMap(queue <INTVEC>q, map<INTVEC, string>& map) {
+	INTVEC iter = q.front();
+	string path = map.find(iter)->second;
+	Loc loc = getLoc(iter);
+	INTVEC move;//还原路径和操作路径相反
+	move = up(iter, loc);
+	addMap("S", move, path, q,map);
+	move = down(iter, loc);
+	addMap("W", move, path, q, map);
+	move = left(iter, loc);
+	addMap("D", move, path, q, map);
+	move = right(iter, loc);
+	addMap("A", move, path, q, map);
+	q.pop();
+}
 
+INTVEC Puzzle::getSolution(map<INTVEC, string>& solution)
+{
+	INTVEC mid;
+	queue<INTVEC>q1, q2;
+	q1.push(arr);//从当前位置广搜
+	q2.push(ok);//从最终位置广搜
+	while (true)
+	{
+		updateMap(q2, possible);
+
+	}
+	return mid;
+}
+void addMap(string dir, INTVEC & move, string & basepath, queue<INTVEC> &q,map<INTVEC, string > &map)
+{
+	if (map.find(move) == map.end()) {
+		string newpath = basepath;
+		newpath += dir;
+		pair<INTVEC, string>p(move, newpath);
+		map.insert(p);
+		q.push(move);
 	}
 }
 
@@ -44,43 +72,27 @@ void Puzzle::showPossible()
 bool debugHead(INTVEC &p) {
 	for (int i = 1; i < 8; i++)
 	{
-		if (p[i-1] != i)
+		if (p[i - 1] != i)
 			return false;
 	}
-	return p[7]==0;
+	return p[7] == 0;
 }
 
-void Puzzle::getAll() {
-	queue<INTVEC> q;
-	q.push(ok);
-	while (!q.empty())
+
+int Puzzle::getInv(INTVEC num)
+{
+	if (num.empty())
+		num = arr;
+	int inv = 0;
+	for (int i = 1; i < N*M; i++)
 	{
-		INTVEC iter = q.front();
-		string path = possible.find(iter)->second;
-		Loc loc=getLoc(iter);
-		INTVEC move;//还原路径和操作路径相反
-		move = up(iter, loc);
-		addPossible("S", move, path, q);
-		move = down(iter, loc);
-		addPossible("W", move, path, q);
-		move = left(iter, loc);
-		addPossible("D", move, path, q);
-		move = right(iter, loc);
-		addPossible("A", move, path, q);
-		q.pop();
-		if (possible.size() % 5000 == 0)
-			cout << possible.size() << endl;
-		/*if (possible.size() > 30000) {
-			cout << "debug:以1，2，3，4，5，6，7,0 开头的可能数目" << endl;
-			for (auto i = possible.begin(); i != possible.end(); i++)
-			{
-				INTVEC p = i->first;
-				if(debugHead(p))
-					printNum(p);
-			}
-			system("Pause");
-		}*/
+		for (int j = 0; j < i - 1; j++)
+		{
+			if (num[i] < num[j])
+				inv++;
+		}
 	}
+	return inv;
 }
 
 
@@ -88,14 +100,10 @@ void Puzzle::getAll() {
 bool Puzzle::available()
 {
 	cout << "分析是否可行" << endl;
-	getAll();
-	cout << "可能的方案数：" << possible.size() << endl;
-	if (possible.find(arr) != possible.end()) {
-		cout << "可行" << endl;
-		printseg();
-		return true;
-	}
-	return false;
+	int inv = getInv();
+	Loc loc = getLoc(arr);
+	int flag = inv + loc.x + loc.y;
+	return flag % 2 == 0;
 }
 Loc getLoc(INTVEC num)
 {
@@ -277,10 +285,13 @@ void Puzzle::load()
 void Puzzle::reduction()
 {
 	cout << "自动还原" << endl;
-	string path = possible.find(arr)->second;
-	reverse(path.begin(), path.end());
+	map<INTVEC, string> solution;
+	INTVEC mid = getSolution(solution);
+	string path1 = solution.find(mid)->second;
+	string path2 = possible.find(arr)->second;
+	reverse(path2.begin(), path2.end());
 	cout << "还原路径如下" << endl;
-	cout << path << endl;
+	cout << path1 + path2 << endl;
 	printseg();
 }
 

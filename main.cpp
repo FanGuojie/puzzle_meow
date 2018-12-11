@@ -31,8 +31,8 @@ int main(int argc, char const *argv[]) {
 	cin >> tmp;
 	if (tmp == "y") {
 		printDefault("3 * 3");
-		N = 3;
-		M = 3;
+		N = 2;
+		M = 2;
 	}
 	else {
 		N = tmp[0]-'0';

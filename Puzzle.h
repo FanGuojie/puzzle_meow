@@ -24,7 +24,8 @@ INTVEC up(INTVEC num, Loc loc);
 INTVEC down(INTVEC num, Loc loc);
 INTVEC left(INTVEC num, Loc loc);
 INTVEC right(INTVEC num, Loc loc);
-Loc getLoc(INTVEC num);
+Loc getLoc(INTVEC num);//计算arr的位置
+void addMap(string dir, INTVEC & move, string & basepath, queue<INTVEC> &q, map<INTVEC, string>& map);
 class Puzzle
 {
 public:
@@ -47,9 +48,9 @@ private:
 	INTVEC ok;
 	INTVEC init;//用于保存最初状态，用于重新开始
 	map<string, INTVEC> states;
-	void getAll();//获取所有可行方案
+	int getInv(INTVEC num = {});//获得数组的逆序对
 	map<INTVEC, string> possible;//第一项是可行方案，第二项是到达路径
-	void addPossible(string dir,INTVEC &move,string &basepath, queue<INTVEC> &q);
+	INTVEC getSolution(map<INTVEC, string> &solution);
 	/*
 	路径定义：改用字符串
 	""：完成
