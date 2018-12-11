@@ -27,9 +27,10 @@ void printRule()
 	cout << "4.存档" << endl;
 	cout << "\tI:下一行输入进度名称，保存游戏进度（游戏进度并不永久保存，只在程序运行期间有效)" << endl;
 	cout << "5.读档" << endl;
-	cout << "\tO:下一行输入进度名称，载入与欧系进度" << endl;
+	cout << "\tO:下一行输入进度名称，载入游戏进度" << endl;
 	cout << "6.自动还原" << endl;
 	cout << "\tF：自动完成拼图复原，以WASD组合形式输出复原步骤" << endl;
 	cout << "7退出." << endl;
 	cout << "\tP:退出游戏，程序结束" << endl;
+	printseg();
 }

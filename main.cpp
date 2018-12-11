@@ -50,7 +50,7 @@ int main(int argc, char const *argv[]) {
 	printseg();
 	//______________________验证拼图可行性________________________
 	//if (!available(num)) {
-	/*while (!p.available()) {
+	while (!p.available()) {
 		cout << "拼图不可完成,q键退出，压其余任意按键重新生成拼图" << endl;
 		char t = _getch();
 		if (t == 'q') {
@@ -62,7 +62,9 @@ int main(int argc, char const *argv[]) {
 			p.shuffleShow();
 			printseg();
 		}
-	}*/
+	}
+	p.showPossible();
+
 	//______________________开始游玩________________________
 	cout << "欢迎游玩" << endl;
 	printRule();
@@ -77,7 +79,8 @@ int main(int argc, char const *argv[]) {
 		case 'D':
 			p.puzzleMove(t);
 			if (p.check()) {
-				cout << "恭喜完成" << endl;
+				cout << "恭喜完成,游戏退出" << endl;
+				exit(1);
 			}
 			break;
 		case 'R':
@@ -102,7 +105,6 @@ int main(int argc, char const *argv[]) {
 			break;
 		default:
 			cout << "非法输入，请看规则，重新输入" << endl;
-			printseg();
 			printRule();
 		}
 	}
