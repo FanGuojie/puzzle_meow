@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <queue>
+#include <stack>
 #include "util.h"
 #include "Img.h"
 #define INTVEC vector<int>
@@ -22,6 +23,7 @@ INTVEC up(INTVEC num, Loc loc);
 INTVEC down(INTVEC num, Loc loc);
 INTVEC left(INTVEC num, Loc loc);
 INTVEC right(INTVEC num, Loc loc);
+typedef INTVEC (*op)(INTVEC, Loc);
 Loc getLoc(INTVEC num);//计算arr的位置
 void addMap(string dir, INTVEC & move, string & basepath, queue<INTVEC> &q, map<INTVEC, string>& map);
 void updateMap(queue <INTVEC>&q, map<INTVEC, string>& map);
@@ -46,6 +48,9 @@ public:
 	void getAll();
 	void preview(Img img);
 private:
+	void bfs();//广度优先搜索，得到最短还原路径
+	void dfs();//深度优先搜索，得到快速还原路径
+	bool canMove(stack<INTVEC>&s, set<INTVEC>&set,string &path2,op op, string &path1, int index);
 	int flag;//ok的逆序对加上-1的位置
 	INTVEC ok;
 	INTVEC init;//用于保存最初状态，用于重新开始
@@ -56,7 +61,7 @@ private:
 	void initq2(queue <INTVEC>&q);
 	void updatePossible(queue <INTVEC>&q);
 	/*
-	路径定义：改用字符串,从源查找，输入的字符是相反的
+	用字符串路径定义
 	""：完成
 	W：上
 	S：下

@@ -16,15 +16,11 @@ class Img
 public:
 	Img(string imgPath);
 	~Img();
-	void setsegPath(string str);
-	void setsplicePath(string str);
-	void segment();
-	void splice(vector<int> arr,string name, string outPath=" ");
-	int readImg(string name,string imgPath =" ");
-
-
-	
-
+	void setsegPath(string str); // 设置分割目录
+	void setsplicePath(string str); // 设置拼接目录
+	void segment();  //图片分割
+	void splice(vector<int> arr,string name, string outPath=" "); //图片拼接
+	int readImg(string name,string imgPath =" "); //读取图片
 private:
 	string path;
 	string segPath;   //分割目录

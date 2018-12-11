@@ -6,7 +6,7 @@ Puzzle::Puzzle(INTVEC num)
 {
 	arr = num;
 	ok = num;
-	string path = "";
+	string path = " ";
 	pair<INTVEC, string>p(ok, path);
 	possible.insert(p);
 	int inv = getInv(ok);
@@ -72,7 +72,7 @@ INTVEC Puzzle::getSolution(map<INTVEC, string>& solution)
 }
 void Puzzle::initq2(queue<INTVEC>& q)
 {
-	for (auto i = possible.begin(); i !=possible.end() ; i++)
+	for (auto i = possible.begin(); i != possible.end(); i++)
 	{
 		q.push(i->first);
 	}
@@ -115,7 +115,91 @@ void Puzzle::preview(Img img)
 	string name = "喵喵不气啦，快好了.png";
 	string path = ".//tmp//";
 	img.splice(arr, name, path);
-	img.readImg("杰儿爱喵的~喵不气了",path + name);
+	img.readImg("杰儿爱喵的~喵不气了", path + name);
+}
+
+void Puzzle::bfs()
+{
+	cout << "最短还原" << endl;
+	map<INTVEC, string> solution;
+	pair<INTVEC, string>p(arr, "");
+	solution.insert(p);
+	INTVEC mid = getSolution(solution);
+	string path1 = solution.find(mid)->second;
+	string path2 = possible.find(mid)->second;
+	reverse(path2.begin(), path2.end());
+	cout << "还原路径如下" << endl;
+	cout << path1 + path2 << endl;
+	printseg();
+}
+
+void Puzzle::dfs()
+{
+	cout << "快速还原" << endl;
+	//先检查是否已经遍历过
+	if (possible.find(arr) != possible.end()) {
+		string path = possible.find(arr)->second;
+		reverse(path.begin(), path.end());
+		cout << "还原路径如下" << endl;
+		cout << path << endl;
+		return;
+	}
+	//dfs 开始
+	stack<INTVEC> s;
+	set<INTVEC> set;
+	set.insert(arr);
+	s.push(arr);
+	string path1 = "";//dfs经历的路径
+	string path2="";//已知可行解中的路径
+	op ops[4] = { up,down,left,right };
+	while (true) {
+	CONTINUE:
+		for (int i = 0; i < 4; i++)
+		{
+			if (canMove(s, set, path2, ops[i],path1,i)) {
+				if (path2 != "")
+					return;
+				goto CONTINUE;
+			}
+		}
+		s.pop();
+		path1.pop_back();
+	}
+
+}
+
+bool Puzzle::canMove(stack<INTVEC> &s, set<INTVEC> &set,string &path2, op op,string &path1,int index)
+{
+	INTVEC iter = s.top();
+	if (possible.find(iter) != possible.end()) {
+		path2 = possible.find(iter)->second;
+		cout << "还原路径如下" << endl;
+		cout << path1+path2 << endl;
+		return true;
+	}
+	Loc loc = getLoc(iter);
+	INTVEC move = op(iter, loc);
+	if (set.find(move) == set.end()) {
+		set.insert(move);
+		s.push(move);
+		switch (index)
+		{
+		case 0:
+			path1 += "W";
+			break;
+		case 1:
+			path1 += "S";
+			break;
+		case 2:
+			path1 += "A";
+			break;
+		case 3:
+			path1 += "D";
+			break;
+		}
+		return true;
+	}
+	return false;
 }
 
 
@@ -362,17 +446,22 @@ void Puzzle::load()
 
 void Puzzle::reduction()
 {
-	cout << "自动还原" << endl;
-	map<INTVEC, string> solution;
-	pair<INTVEC, string>p(arr, "");
-	solution.insert(p);
-	INTVEC mid = getSolution(solution);
-	string path1 = solution.find(mid)->second;
-	string path2 = possible.find(mid)->second;
-	reverse(path2.begin(), path2.end());
-	cout << "还原路径如下" << endl;
-	cout << path1 + path2 << endl;
-	printseg();
+	cout << "输入A，快速还原，得到一条还原路径，但不是最短的" << endl;
+	cout << "输入B，最短还原,用较长的时间，得到一条最短的还原路径" << endl;
+	char t = _getch();
+	t = toCaption(t);
+	switch (t) {
+	case 'A':
+		dfs();
+		break;
+	case 'B':
+		bfs();
+		break;
+	default:
+		cout << "输入错误，重新输入" << endl;
+		reduction();
+	}
+	
 }
 
 bool Puzzle::check()

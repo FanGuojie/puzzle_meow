@@ -26,7 +26,7 @@ int main(int argc, char const *argv[]) {
 		imgPath = ".\\img\\仙女喵.png";
 	}
 	Img img(imgPath);
-	img.readImg("小可爱模式");
+	//img.readImg("小可爱模式");
 	cout << "现在把图片划分成 N * M 的大小，请输入参数以确定游戏难度(输入 y 使用默认参数 3 * 2）" << endl;
 	string tmp;
 	cin >> tmp;
