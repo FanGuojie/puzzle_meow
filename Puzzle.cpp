@@ -30,6 +30,8 @@ void Puzzle::addPossible(string dir, INTVEC & move, string & basepath,queue<INTV
 
 void Puzzle::showPossible()
 {
+	printseg();
+	cout << "所有的可能方案" << endl;
 	for (auto i = possible.begin(); i != possible.end(); i++)
 	{
 		printNum(i->first);
@@ -38,6 +40,14 @@ void Puzzle::showPossible()
 		cout << "对应路径: " << path << endl;
 	}
 	printseg();
+}
+bool debugHead(INTVEC &p) {
+	for (int i = 1; i < 8; i++)
+	{
+		if (p[i-1] != i)
+			return false;
+	}
+	return p[7]==0;
 }
 
 void Puzzle::getAll() {
@@ -58,6 +68,18 @@ void Puzzle::getAll() {
 		move = right(iter, loc);
 		addPossible("A", move, path, q);
 		q.pop();
+		if (possible.size() % 5000 == 0)
+			cout << possible.size() << endl;
+		/*if (possible.size() > 30000) {
+			cout << "debug:以1，2，3，4，5，6，7,0 开头的可能数目" << endl;
+			for (auto i = possible.begin(); i != possible.end(); i++)
+			{
+				INTVEC p = i->first;
+				if(debugHead(p))
+					printNum(p);
+			}
+			system("Pause");
+		}*/
 	}
 }
 
@@ -67,7 +89,7 @@ bool Puzzle::available()
 {
 	cout << "分析是否可行" << endl;
 	getAll();
-
+	cout << "可能的方案数：" << possible.size() << endl;
 	if (possible.find(arr) != possible.end()) {
 		cout << "可行" << endl;
 		printseg();

@@ -31,8 +31,8 @@ int main(int argc, char const *argv[]) {
 	cin >> tmp;
 	if (tmp == "y") {
 		printDefault("3 * 3");
-		M = 3;
 		N = 3;
+		M = 3;
 	}
 	else {
 		N = tmp[0]-'0';
@@ -78,7 +78,7 @@ int main(int argc, char const *argv[]) {
 			printseg();
 		}
 	}
-	p.showPossible();
+	//p.showPossible();
 
 	//______________________开始游玩________________________
 	cout << "欢迎游玩" << endl;
