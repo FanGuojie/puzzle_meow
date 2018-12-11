@@ -27,11 +27,11 @@ int main(int argc, char const *argv[]) {
 	}
 	Img img(imgPath);
 	img.readImg("小可爱模式");
-	cout << "现在把图片划分成 N * M 的大小，请输入参数以确定游戏难度(输入 y 使用默认参数 3 * 3）" << endl;
+	cout << "现在把图片划分成 N * M 的大小，请输入参数以确定游戏难度(输入 y 使用默认参数 3 * 2）" << endl;
 	string tmp;
 	cin >> tmp;
 	if (tmp == "y") {
-		printDefault("3 * 3");
+		printDefault("3 * 2");
 		N = 3;
 		M = 2;
 	}

@@ -8,8 +8,6 @@
 #include <map>
 #include <set>
 #include <queue>
-
-#include "constant.h"
 #include "util.h"
 #include "Img.h"
 #define INTVEC vector<int>
