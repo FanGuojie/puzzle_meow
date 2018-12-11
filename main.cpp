@@ -19,10 +19,25 @@ int M=0, N=0;
 int main(int argc, char const *argv[]) {
 	//______________________读取图片目录 & 设置难度 N M________________________
 	string imgPath;//图片目录
+	cout << "请输入背景图片的路径(输入y使用默认的图片 仙女喵.png)" << endl;
 	cin >> imgPath;
+	if (imgPath == "y") {
+		printDefault(" 仙女喵.png ");
+		imgPath = "C:\\Users\\fgj\\source\\repos\\puzzle\\puzzle\\img\\lena_400_225.jpg";
+	}
 	Img img(imgPath);
-
-	cin >> N >> M;
+	cout << "现在把图片划分成N*M的大小，请输入参数以确定游戏难度(输入y使用默认参数3*3）" << endl;
+	string tmp;
+	cin >> tmp;
+	if (tmp == "y") {
+		printDefault("3 * 3");
+		M = 3;
+		N = 3;
+	}
+	else {
+		N = tmp[0]-'0';
+		cin >> M;
+	}
 	img.setsegPath(".\\segmentImg\\");
 	img.setsplicePath(".\\splice\\");
 	/*while (!readImg(path)) {
