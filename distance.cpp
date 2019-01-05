@@ -1,19 +1,16 @@
 ﻿#include "distance.h"
-
-Dis::Dis(int n,int m)
+extern int M, N;
+void Dis()
 {
-	this->n = n;
-	this->m = m;
-	Manha.resize(n*m);
-	for (int i = 0; i < n*m; i++)
+	vector<INTVEC> Manha(N*M, INTVEC(N*M)); 
+	for (int i = 0; i < N*M; i++)
 	{
-		Manha[i].resize(n*m);
-		int ni = i / n;
-		int mi = i % n;
+		int ni = i / N;
+		int mi = i % N;
 		for (int j = 0; j < i; j++)
 		{
-			int nj = j / n;
-			int mj = j % m;
+			int nj = j / N;
+			int mj = j % M;
 			Manha[i][j] = abs(ni - nj) + abs(mi - mj);
 			Manha[j][i] = Manha[i][j];
 		}
@@ -22,12 +19,11 @@ Dis::Dis(int n,int m)
 	//输出到文件
 	string filename = "distance.txt";
 	ofstream dis(filename);
-	dis << n << " " << m << endl;
 	if (dis) {//创建成功
 		cout << "输出到文件" << endl;
-		for (int  i = 0; i < n*m; i++)
+		for (int  i = 0; i < N*M; i++)
 		{
-			for (int j = 0; j < n*m; j++)
+			for (int j = 0; j < N*M; j++)
 			{
 				dis << Manha[i][j] << " ";
 			}
@@ -41,13 +37,3 @@ Dis::Dis(int n,int m)
 	
 }
 
-Dis::~Dis()
-{
-}
-
-/*
-int main() {
-	cout << "test" << endl;
-	Dis dis(3,3);
-}
-*/

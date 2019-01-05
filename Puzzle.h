@@ -54,6 +54,7 @@ private:
 	map<string, INTVEC> states;
 	int getInv(INTVEC num = {});//获得数组的逆序对
 	map<INTVEC, string> possible;//第一项是可行方案，第二项是到达路径
+	set<INTVEC> Aupdated;//Astar has  updated
 	INTVEC getSolution(map<INTVEC, string> &solution);
 	void initq2(queue <INTVEC>&q);
 	void updatePossible(queue <INTVEC>&q);

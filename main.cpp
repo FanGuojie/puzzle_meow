@@ -7,14 +7,16 @@
 #include <opencv2/highgui/highgui.hpp>    
 #include <opencv2/imgproc/imgproc.hpp>  
 
-
+#include "distance.h"
 #include "Puzzle.h"
 #include "util.h"
 #include "Img.h"
+#include "Anode.h"
 #define Vec vector<Mat>
 using namespace std;
 using namespace cv;
 int M=0, N=0;
+
 
 int main(int argc, char const *argv[]) {
 	//______________________读取图片目录 & 设置难度 N M________________________
@@ -22,12 +24,12 @@ int main(int argc, char const *argv[]) {
 	string imgPath;//图片目录
 	cout << "请输入背景图片的路径(输入 y 使用默认的图片 仙女喵.png)" << endl;
 	cin >> imgPath;
-	if (imgPath == "y") {
+	if (imgPath == "y" || imgPath == "Y") {
 		cout << "仙女喵突然出现" << endl;
 		imgPath = ".\\img\\仙女喵.png";
 	}
 	Img img(imgPath);
-	img.readImg("小可爱模式");
+	//img.readImg("小可爱模式");
 	INPUT_NM :
 	cout << "现在把图片划分成 N * M 的大小" << endl;
 	cout << "请输入参数以确定游戏难度，即输入两个数字用空格隔开，分别代表N 和 M" << endl;
@@ -44,6 +46,9 @@ int main(int argc, char const *argv[]) {
 		N = tmp[0]-'0';
 		cin >> M;
 	}
+	//生成曼哈顿距离表
+	Anode::initDis();
+	//cout<<Anode::Manha[0] << endl;
 	img.setsegPath(".\\segmentImg\\");
 	img.setsplicePath(".\\splice\\");
 	/*while (!readImg(path)) {
@@ -92,7 +97,7 @@ int main(int argc, char const *argv[]) {
 
 	//______________________开始游玩________________________
 	cout << "欢迎游玩" << endl;
-	p.preview(img);
+	//p.preview(img);
 	printRule();
 	while (1) {
 		char t = _getch();

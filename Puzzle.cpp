@@ -24,8 +24,8 @@ void Puzzle::updatePossible(queue <INTVEC>&q) {
 	Loc loc = getLoc(iter);
 	INTVEC move;//还原路径和操作路径相反
 	//重构：用函数指针，循环实现四次变量
-	INTVEC (*movFun[4])(INTVEC, Loc) = {up,down,left,right};
-	String dir[4] = {"S","W","D","A"};
+	INTVEC(*movFun[4])(INTVEC, Loc) = { up,down,left,right };
+	String dir[4] = { "S","W","D","A" };
 	for (int i = 0; i < 4; i++)
 	{
 		move = movFun[i](iter, loc);
@@ -87,6 +87,95 @@ void Puzzle::preview(Img img)
 	img.readImg("杰儿爱喵的~喵不气了", path + name);
 }
 
+void Puzzle::Astar()
+{
+	cout << "最快还原" << endl;
+	Aupdated.clear();
+	Aupdated.insert(arr);
+	Anode head(arr, 0);
+	vector<Anode> openlist;
+	openlist.push_back(head);
+	Anode iter = openlist[0];
+	INTVEC(*movFun[4])(INTVEC, Loc) = { up,down,left,right };
+	String dir[4] = { "W","S","A","D" };
+	while (iter.h != 0)
+	{
+		INTVEC num = iter.arr;
+		//cout << "g: "<< iter.g << endl;
+		//cout << "h: " << iter.h << endl;
+		//for (auto it:openlist)
+		//{
+		//	cout << it.f << "\t";
+		//}
+		//cout << "f: " << iter.f << endl;
+		//printseg();
+		string path = iter.path;
+		Loc loc = getLoc(num);
+		for (int i = 0; i < 4; i++)
+		{
+			INTVEC move = movFun[i](num, loc);
+			if (move == num || Aupdated.find(move) != Aupdated.end())
+				continue;
+			Aupdated.insert(move);
+			Anode node(move, iter.g + 3);
+			node.path = path + dir[i];
+			openlist.push_back(node);
+			int index = openlist.size() - 1;
+			//优先队列排序,入队
+			while (index >= 0 && openlist[index].f < openlist[index / 2].f)
+			{
+				swap(openlist[index], openlist[index / 2]);
+				index /= 2;
+			}
+
+		}
+		//出队
+		if (num == openlist[0].arr) {
+			int size = openlist.size();
+			swap(openlist[0], openlist[size - 1]);
+			openlist.pop_back();
+			int index = 0;
+			int value = openlist[0].f;
+			size = openlist.size();
+			while (2 * index + 2 < size ) {
+				int left = openlist[index * 2 + 1].f;
+				int right = openlist[index * 2 + 2].f;
+				if (left < right)
+				{
+					if (left < value) {
+						swap(openlist[index], openlist[index * 2 + 1]);
+						index = index * 2 + 1;
+					}
+					else {
+						break;
+					}
+				}
+				else {
+					if (right < value) {
+						swap(openlist[index], openlist[index * 2 + 2]);
+						index = index * 2 + 2;
+					}
+					else {
+						break;
+					}
+				}
+			}
+			if (2 * index + 2 == size - 1) {
+				int left = openlist[index * 2 + 1].f;
+				if (left < value) {
+					swap(openlist[index], openlist[index * 2 + 1]);
+					index = index * 2 + 1;
+				}
+			}
+
+		}
+		iter = openlist[0];
+	}
+	cout << "还原路径如下" << endl;
+	cout << iter.path << endl;
+	printseg();
+}
+
 void Puzzle::bfs()
 {
 	cout << "最短还原" << endl;
@@ -111,7 +200,7 @@ int Puzzle::preFind() {
 		reverse(path.begin(), path.end());
 		cout << "还原路径如下" << endl;
 		cout << path << endl;
-		return OK;
+		return 0;
 	}
 	else
 		return -1;
@@ -131,13 +220,13 @@ void Puzzle::dfs()
 	set.insert(arr);
 	s.push(arr);
 	string path1 = "";//dfs经历的路径
-	string path2="";//已知可行解中的路径
+	string path2 = "";//已知可行解中的路径
 	op ops[4] = { up,down,left,right };
 	while (true) {
 	CONTINUE:
 		for (int i = 0; i < 4; i++)
 		{
-			if (canMove(s, set, path2, ops[i],path1,i)) {
+			if (canMove(s, set, path2, ops[i], path1, i)) {
 				if (path2 != "")
 					return;
 				goto CONTINUE;
@@ -149,18 +238,15 @@ void Puzzle::dfs()
 
 }
 
-void Puzzle::Astar()
-{
 
-}
 
-bool Puzzle::canMove(stack<INTVEC> &s, set<INTVEC> &set,string &path2, op op,string &path1,int index)
+bool Puzzle::canMove(stack<INTVEC> &s, set<INTVEC> &set, string &path2, op op, string &path1, int index)
 {
 	INTVEC iter = s.top();
 	if (possible.find(iter) != possible.end()) {
 		path2 = possible.find(iter)->second;
 		cout << "还原路径如下" << endl;
-		cout << path1+path2 << endl;
+		cout << path1 + path2 << endl;
 		return true;
 	}
 	Loc loc = getLoc(iter);
@@ -449,7 +535,7 @@ void Puzzle::reduction()
 		cout << "输入错误，重新输入" << endl;
 		reduction();
 	}
-	
+
 }
 
 bool Puzzle::check()

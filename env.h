@@ -5,4 +5,3 @@
 #include<string>
 using namespace std;
 #define INTVEC vector<int>
-#define OK 0
