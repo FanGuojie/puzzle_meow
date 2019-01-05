@@ -1,9 +1,6 @@
 ﻿#pragma once
-#include<vector>
-#include<string>
-#include<iostream>
+#include "env.h"
 #include<conio.h>
-#include <algorithm>    // std::random_shuffle
 #include <ctime>        // std::time
 #include <map>
 #include <set>
@@ -11,9 +8,7 @@
 #include <stack>
 #include "util.h"
 #include "Img.h"
-#define INTVEC vector<int>
-using namespace std;
-
+#include "Anode.h"
 
 typedef struct Loc
 {
@@ -45,11 +40,13 @@ public:
 	void reduction(); 
 	bool check();
 	void showPossible();
-	void getAll();
 	void preview(Img img);
 private:
 	void bfs();//广度优先搜索，得到最短还原路径
-	void dfs();//深度优先搜索，得到快速还原路径
+	void dfs();//深度优先搜索，得到快速还原路径,这个问题不适合这个算法
+	void Astar();//A*启发搜索搜索
+	
+	int preFind();
 	bool canMove(stack<INTVEC>&s, set<INTVEC>&set,string &path2,op op, string &path1, int index);
 	int flag;//ok的逆序对加上-1的位置
 	INTVEC ok;

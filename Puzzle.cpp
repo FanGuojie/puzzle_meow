@@ -23,14 +23,14 @@ void Puzzle::updatePossible(queue <INTVEC>&q) {
 	string path = possible.find(iter)->second;
 	Loc loc = getLoc(iter);
 	INTVEC move;//还原路径和操作路径相反
-	move = up(iter, loc);
-	addMap("S", move, path, q, possible);
-	move = down(iter, loc);
-	addMap("W", move, path, q, possible);
-	move = left(iter, loc);
-	addMap("D", move, path, q, possible);
-	move = right(iter, loc);
-	addMap("A", move, path, q, possible);
+	//重构：用函数指针，循环实现四次变量
+	INTVEC (*movFun[4])(INTVEC, Loc) = {up,down,left,right};
+	String dir[4] = {"S","W","D","A"};
+	for (int i = 0; i < 4; i++)
+	{
+		move = movFun[i](iter, loc);
+		addMap(dir[i], move, path, q, possible);
+	}
 	q.pop();
 }
 //源和目标搜索的函数分开，原因是加入的字母相反
@@ -39,14 +39,14 @@ void updateMap(queue <INTVEC>&q, map<INTVEC, string>& map) {
 	string path = map.find(iter)->second;
 	Loc loc = getLoc(iter);
 	INTVEC move;//还原路径和操作路径相反
-	move = up(iter, loc);
-	addMap("W", move, path, q, map);
-	move = down(iter, loc);
-	addMap("S", move, path, q, map);
-	move = left(iter, loc);
-	addMap("A", move, path, q, map);
-	move = right(iter, loc);
-	addMap("D", move, path, q, map);
+	//重构：用函数指针，循环实现四次变量
+	INTVEC(*movFun[4])(INTVEC, Loc) = { up,down,left,right };
+	String dir[4] = { "W","S","A","D" };
+	for (int i = 0; i < 4; i++)
+	{
+		move = movFun[i](iter, loc);
+		addMap(dir[i], move, path, q, map);
+	}
 	q.pop();
 }
 
@@ -59,12 +59,13 @@ INTVEC Puzzle::getSolution(map<INTVEC, string>& solution)
 	while (true)
 	{
 		updatePossible(q2);
-		INTVEC iter = q1.front();
-		//showPossible();
-		//printNum(iter);
-		//system("Pause");
-		if (possible.find(iter) != possible.end()) {
-			return iter;
+		INTVEC iter1 = q1.front();
+		if (possible.find(iter1) != possible.end()) {
+			return iter1;
+		}
+		INTVEC iter2 = q2.front();
+		if (solution.find(iter2) != solution.end()) {
+			return iter2;
 		}
 		updateMap(q1, solution);
 
@@ -75,38 +76,6 @@ void Puzzle::initq2(queue<INTVEC>& q)
 	for (auto i = possible.begin(); i != possible.end(); i++)
 	{
 		q.push(i->first);
-	}
-}
-void Puzzle::getAll() {
-	queue<INTVEC> q;
-	q.push(ok);
-	while (!q.empty())
-	{
-		INTVEC iter = q.front();
-		string path = possible.find(iter)->second;
-		Loc loc = getLoc(iter);
-		INTVEC move;//还原路径和操作路径相反
-		move = up(iter, loc);
-		addMap("S", move, path, q, possible);
-		move = down(iter, loc);
-		addMap("W", move, path, q, possible);
-		move = left(iter, loc);
-		addMap("D", move, path, q, possible);
-		move = right(iter, loc);
-		addMap("A", move, path, q, possible);
-		q.pop();
-		if (possible.size() % 5000 == 0)
-			cout << possible.size() << endl;
-		/*if (possible.size() > 30000) {
-		cout << "debug:以1，2，3，4，5，6，7,0 开头的可能数目" << endl;
-		for (auto i = possible.begin(); i != possible.end(); i++)
-		{
-		INTVEC p = i->first;
-		if(debugHead(p))
-		printNum(p);
-		}
-		system("Pause");
-		}*/
 	}
 }
 
@@ -121,6 +90,10 @@ void Puzzle::preview(Img img)
 void Puzzle::bfs()
 {
 	cout << "最短还原" << endl;
+	if (!preFind())
+	{
+		return;
+	}
 	map<INTVEC, string> solution;
 	pair<INTVEC, string>p(arr, "");
 	solution.insert(p);
@@ -132,16 +105,24 @@ void Puzzle::bfs()
 	cout << path1 + path2 << endl;
 	printseg();
 }
-
-void Puzzle::dfs()
-{
-	cout << "快速还原" << endl;
-	//先检查是否已经遍历过
+int Puzzle::preFind() {
 	if (possible.find(arr) != possible.end()) {
 		string path = possible.find(arr)->second;
 		reverse(path.begin(), path.end());
 		cout << "还原路径如下" << endl;
 		cout << path << endl;
+		return OK;
+	}
+	else
+		return -1;
+}
+
+void Puzzle::dfs()
+{
+	cout << "快速还原" << endl;
+	//先检查是否已经遍历过
+	if (!preFind())
+	{
 		return;
 	}
 	//dfs 开始
@@ -165,6 +146,11 @@ void Puzzle::dfs()
 		s.pop();
 		path1.pop_back();
 	}
+
+}
+
+void Puzzle::Astar()
+{
 
 }
 
@@ -453,7 +439,8 @@ void Puzzle::reduction()
 	t = toCaption(t);
 	switch (t) {
 	case 'A':
-		dfs();
+		//dfs();
+		Astar();
 		break;
 	case 'B':
 		bfs();

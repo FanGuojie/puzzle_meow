@@ -56,8 +56,10 @@ void welcome()
 
 void newBackgound(Img &img)
 {
+	cout << "请输入新的图片地址" << endl;
 	string newPath;
 	cin >> newPath;
 	img.setPath(newPath);
 	img.segment();
+	img.readImg("漂亮的lena哟~");
 }

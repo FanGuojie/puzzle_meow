@@ -5,3 +5,6 @@
 puzzle.vcxproj
 puzzle.vcxproj.filters
 puzzle.vcxproj.user
+*.mp4
+/tmp
+*.pdf
